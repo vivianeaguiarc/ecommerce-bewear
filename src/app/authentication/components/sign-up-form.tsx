@@ -1,7 +1,8 @@
 'use client'
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,33 +24,58 @@ import {
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  email: z.email('Email inválido!'),
-  password: z.string('Senha inválida!').min(8, 'Senha inválida!'),
+  name: z.string("Nome inválido.").trim().min(1, "Nome é obrigátorio"),
+  email: z.string().email("Email inválido."),
+  password: z.string("Senha inválida.").min(8, "Senha inválida."),
+  passwordConfirmation: z.string().min(1, "Confirme sua senha"),
+}).refine((data) => data.password === data.passwordConfirmation, {
+  message: "As senhas não coincidem",
+  path: ["passwordConfirmation"], 
 });
+
 type FormValues = z.infer<typeof formSchema>;
 
-const SignInForm = () => {
+const SignUpForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
+
   function onSubmit(values: FormValues) {
-    console.log("FORMULÁRIO VÁLIDO!")
+    console.log("FORMULÁRIO VÁLIDO!");
     console.log(values);
   }
+
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Entre em sua conta</CardTitle>
-          <CardDescription>Faça login para continuar.</CardDescription>
+          <CardTitle>Crie sua conta</CardTitle>
+          <CardDescription>Crie sua conta para continuar.</CardDescription>
         </CardHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <CardContent className="grid gap-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite seu nome" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -63,6 +89,7 @@ const SignInForm = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"
@@ -80,9 +107,28 @@ const SignInForm = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="passwordConfirmation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirme sua Senha</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite a sua senha novamente"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
+
             <CardFooter>
-              <Button type="submit">Entrar</Button>
+              <Button type="submit">Criar conta</Button>
             </CardFooter>
           </form>
         </Form>
@@ -91,4 +137,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;
