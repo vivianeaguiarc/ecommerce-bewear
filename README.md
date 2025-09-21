@@ -1,6 +1,6 @@
 # 🛍️ BEWEAR - E-commerce
 
-![Capa do Projeto](./docs/Capa.png)
+![Capa do Projeto](./public/Capa.png)
 
 Projeto de e-commerce **BEWEAR**, desenvolvido com foco em **performance, escalabilidade e boas práticas**.  
 Este repositório contém a aplicação **frontend e backend**, bem como a modelagem do banco de dados.
